@@ -15,9 +15,7 @@ function SafetyPage() {
   return (
     <div className="min-h-dvh bg-background">
       <header className="mx-auto flex max-w-3xl items-center justify-between px-4 py-5">
-        <Link to="/" aria-label="ReJenga home">
-          <Logo />
-        </Link>
+        <Logo />
         <Button asChild variant="outline" size="sm">
           <Link to="/dashboard">Dashboard</Link>
         </Button>
