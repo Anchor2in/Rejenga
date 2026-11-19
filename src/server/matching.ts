@@ -10,6 +10,8 @@ export type MatchRequest = {
   modelLabel: string;
   partTypeId: number;
   area: AreaPoint;
+  /** False when an admin has disabled the requested model or part type. */
+  catalogueActive?: boolean;
 };
 
 export type CandidateInput = {
@@ -50,6 +52,7 @@ export function distanceKm(a: Pick<AreaPoint, "lat" | "lng">, b: Pick<AreaPoint,
 
 /** Returns why a candidate must not be suggested, or null when it is eligible. */
 export function exclusionReason(c: CandidateInput, req: MatchRequest): string | null {
+  if (req.catalogueActive === false) return "requested model or part is no longer supported";
   if (c.donorId === req.recipientId) return "own listing";
   if (c.listingStatus !== "active") return `listing ${c.listingStatus}`;
   if (c.availability !== "available") return `part ${c.availability}`;

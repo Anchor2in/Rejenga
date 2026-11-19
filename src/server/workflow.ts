@@ -34,6 +34,7 @@ export async function loadMatchRequest(ex: Executor, requestId: number): Promise
       partTypeId: partRequests.partTypeId,
       partName: partTypes.name,
       status: partRequests.status,
+      catalogueActive: sql<boolean>`${deviceModels.active} and ${partTypes.active}`,
       area: { id: areas.id, name: areas.name, lat: areas.lat, lng: areas.lng },
     })
     .from(partRequests)

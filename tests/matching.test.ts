@@ -51,6 +51,10 @@ describe("exclusionReason", () => {
     expect(exclusionReason(cand(o), req)).not.toBeNull();
   });
 
+  it("excludes everything when the requested model was disabled", () => {
+    expect(exclusionReason(cand(), { ...req, catalogueActive: false })).not.toBeNull();
+  });
+
   it("keeps an available, compatible part", () => {
     expect(exclusionReason(cand(), req)).toBeNull();
   });
