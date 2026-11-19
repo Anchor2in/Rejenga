@@ -1,0 +1,12 @@
+node_modules
+.output
+.nitro
+.tanstack
+dist
+.env
+uploads/*
+!uploads/.gitkeep
+ai-data/*
+!ai-data/README.md
+models/
+*.log
