@@ -54,6 +54,9 @@ async function main() {
     console.log("Database already has users — skipping seed. Run `npm run db:reset` to start fresh.");
     return;
   }
+  if (process.env.NODE_ENV === "production" && !process.env.SEED_PASSWORD) {
+    throw new Error("Refusing to seed demo accounts with the published password in production. Set SEED_PASSWORD.");
+  }
   const demoPassword = process.env.SEED_PASSWORD ?? "rejenga123";
   const hash = await bcrypt.hash(demoPassword, 10);
 
