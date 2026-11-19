@@ -4,7 +4,7 @@ import { z } from "zod";
 import { db, schema } from "@/server/db";
 import { requireUser } from "@/server/auth";
 import { config } from "@/server/config";
-import { runPhotoCheck, saveUpload } from "@/server/uploads";
+import { runPhotoCheck, saveUpload, validatePhoto } from "@/server/uploads";
 import { closeListing, notifyMatchesForListing } from "@/server/workflow";
 import { loadPhotos } from "@/server/photos";
 
@@ -42,6 +42,7 @@ async function storePhotos(listingId: number, files: File[]) {
 function photoFiles(form: FormData) {
   const files = form.getAll("photos").filter((f): f is File => f instanceof File && f.size > 0);
   if (files.length > config.maxPhotosPerListing) throw new Error(`Upload at most ${config.maxPhotosPerListing} photos.`);
+  files.forEach(validatePhoto);
   return files;
 }
 

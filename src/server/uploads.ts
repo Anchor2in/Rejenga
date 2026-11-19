@@ -9,10 +9,14 @@ const EXT: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "
 
 export const uploadPath = (fileName: string) => path.join(config.uploadDir, path.basename(fileName));
 
-export async function saveUpload(file: File) {
-  const ext = EXT[file.type];
-  if (!ext) throw new Error("Photos must be JPEG, PNG or WebP images.");
+export function validatePhoto(file: File) {
+  if (!EXT[file.type]) throw new Error("Photos must be JPEG, PNG or WebP images.");
   if (file.size > config.maxPhotoBytes) throw new Error("Each photo must be 5 MB or smaller.");
+}
+
+export async function saveUpload(file: File) {
+  validatePhoto(file);
+  const ext = EXT[file.type];
   await fs.mkdir(config.uploadDir, { recursive: true });
   const fileName = `${randomUUID()}.${ext}`;
   await fs.writeFile(uploadPath(fileName), Buffer.from(await file.arrayBuffer()));
