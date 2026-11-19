@@ -109,9 +109,13 @@ export const getMatchFn = createServerFn({ method: "GET" })
 export const getMyMatchesFn = createServerFn({ method: "GET" }).handler(async () => {
   const user = await requireUser();
   await expireReservations();
-  return matchQuery()
+  const rows = await matchQuery()
     .where(or(eq(deviceListings.donorId, user.id), eq(partRequests.recipientId, user.id)))
     .orderBy(desc(matches.reservedAt));
+  return rows.map((m) => {
+    const open = m.status === "reserved" || m.status === "accepted";
+    return { ...m, donorPhone: open ? m.donorPhone : null, recipientPhone: open ? m.recipientPhone : null };
+  });
 });
 
 export const getInspectionQueueFn = createServerFn({ method: "GET" }).handler(async () => {
