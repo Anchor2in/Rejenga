@@ -275,9 +275,11 @@ export async function recordInspection(technicianId: number, matchId: number, in
 }
 
 export async function recordOutcome(userId: number, isAdmin: boolean, matchId: number, outcome: "completed" | "declined", note?: string) {
+  await expireReservations();
   return db.transaction(async (tx) => {
     const m = await lockMatch(tx, matchId);
     if (!isAdmin && userId !== m.donorId && userId !== m.recipientId) throw new WorkflowError("Match not found.");
+    if (!isAdmin && userId !== m.recipientId) throw new WorkflowError("Only the recipient records whether the handover happened.");
     if (m.status !== "accepted") throw new WorkflowError("An outcome can only be recorded after a technician accepted the part.");
     await tx
       .update(matches)
