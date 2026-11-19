@@ -299,6 +299,7 @@ export async function recordOutcome(userId: number, isAdmin: boolean, matchId: n
 }
 
 export async function cancelMatch(userId: number, isAdmin: boolean, matchId: number, note?: string) {
+  await expireReservations();
   return db.transaction(async (tx) => {
     const m = await lockMatch(tx, matchId);
     if (!isAdmin && userId !== m.donorId && userId !== m.recipientId) throw new WorkflowError("Match not found.");
