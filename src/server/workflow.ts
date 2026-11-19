@@ -327,6 +327,9 @@ async function cancelOpenMatchesWhere(tx: Executor, matchIds: number[], userId: 
 /** Donor withdrawal or admin removal: takes the listing and all its free or reserved parts out of matching. */
 export async function closeListing(userId: number, listingId: number, status: "withdrawn" | "removed", reason?: string) {
   return db.transaction(async (tx) => {
+    // Lock the parts first so a reservation running at the same time either commits before this
+    // (and its match is cancelled below) or waits and then finds the part withdrawn.
+    await tx.select({ id: listingParts.id }).from(listingParts).where(eq(listingParts.listingId, listingId)).for("update");
     const open = await tx
       .select({ id: matches.id })
       .from(matches)
