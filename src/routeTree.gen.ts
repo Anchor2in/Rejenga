@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as SafetyRouteImport } from './routes/safety'
 import { Route as AppAdminRouteImport } from './routes/_app/admin'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
@@ -42,6 +43,11 @@ const AppRoute = AppRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SafetyRoute = SafetyRouteImport.update({
+  id: '/safety',
+  path: '/safety',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppAdminRoute = AppAdminRouteImport.update({
@@ -133,6 +139,7 @@ const AppRequestsNewRoute = AppRequestsNewRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/safety': typeof SafetyRoute
   '/admin': typeof AppAdminRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/notifications': typeof AppNotificationsRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/safety': typeof SafetyRoute
   '/dashboard': typeof AppDashboardRoute
   '/notifications': typeof AppNotificationsRoute
   '/technician': typeof AppTechnicianRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/safety': typeof SafetyRoute
   '/_app/admin': typeof AppAdminRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/notifications': typeof AppNotificationsRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/safety'
     | '/admin'
     | '/dashboard'
     | '/notifications'
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/safety'
     | '/dashboard'
     | '/notifications'
     | '/technician'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/auth'
+    | '/safety'
     | '/_app/admin'
     | '/_app/dashboard'
     | '/_app/notifications'
@@ -264,6 +276,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
+  SafetyRoute: typeof SafetyRoute
   PhotosFileRoute: typeof PhotosFileRoute
 }
 
@@ -288,6 +301,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/safety': {
+      id: '/safety'
+      path: '/safety'
+      fullPath: '/safety'
+      preLoaderRoute: typeof SafetyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/admin': {
@@ -466,6 +486,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
+  SafetyRoute: SafetyRoute,
   PhotosFileRoute: PhotosFileRoute,
 }
 export const routeTree = rootRouteImport
